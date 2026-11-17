@@ -12,7 +12,7 @@ const { key: daytonaKey } = require('../test/fixtures/daytona.cjs');
 const stepTimeout = 20_000;
 const app = path.resolve(process.argv[2] || 'dist/mac-arm64/Workbench.app');
 const baseline = process.argv[3] && path.resolve(process.argv[3]);
-const scenarios = new Set((process.env.WORKBENCH_PACKAGED_SCENARIOS || 'research,review,upgrade,cloud').split(','));
+const scenarios = new Set((process.env.WORKBENCH_PACKAGED_SCENARIOS || 'research,review,routing,upgrade,cloud').split(','));
 const executable = (bundle) => path.join(bundle, 'Contents', 'MacOS', path.basename(bundle, '.app'));
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -195,17 +195,44 @@ async function review(page, data) {
   console.log('PASS packaged parallel Pi worktrees, review navigation, selected apply, conflict, and undo');
 }
 
+async function routing(page, model, fixture) {
+  const [success, failure] = await page.evaluate(async (model) => {
+    const wb = window.workbench;
+    await wb.setRoutingRules([{ harness: 'pi', model, match: 'contains', contains: 'billing' }]);
+    const session = await wb.createSession();
+    return Promise.all([
+      wb.prompt(session.id, 'Connect the billing review fixture.', { model: '@workbench/auto', permission: 'auto' }),
+      wb.prompt(session.id, 'Workbench billing fixture', { model: '@workbench/auto', permission: 'auto' }),
+    ]);
+  }, model);
+  const selected = await finishedRun(page, success.id);
+  assert.equal(selected.actualModel, model);
+  assert.equal(selected.routing, 'contains');
+  assert.equal(selected.usage?.total ?? (selected.usage?.input + selected.usage?.output), 66);
+  const failed = await eventually(async () => {
+    const record = await readRun(page, failure.id);
+    return record.status === 'failed' && record;
+  }, 'an unavailable model to become a failed run');
+  assert.equal(failed.actualModel, model);
+  assert.equal(fixture.requests.filter(({ user }) => user.includes('Workbench billing fixture')).length, 1);
+  await click(rail(page, 'Activity'));
+  await click(active(page).getByRole('button', { name: 'Needs attention', exact: true }));
+  await active(page).getByRole('button', { name: /fixture provider is unavailable|Workbench billing fixture/ }).first().waitFor();
+  console.log('PASS configured model routing, usage receipt, and failed model request without replay');
+}
+
 async function cloud(page, fixture) {
   await connect(page, fixture.address);
   await click(rail(page, 'Computers'));
   await click(page.getByRole('button', { name: 'Connect Daytona', exact: true }));
-  await page.getByPlaceholder('Daytona API key').fill(daytonaKey);
+  await page.getByLabel('Daytona API key', { exact: true }).fill(daytonaKey);
   await click(page.getByRole('button', { name: 'Connect', exact: true }));
-  const id = await eventually(async () => await page.evaluate(async () => {
-    const wb = window.workbench;
-    if (!(await wb.computerList()).daytona) return null;
-    return wb.computerCreate('Fixture desktop', 'daytona');
-  }), 'Daytona connection');
+  await click(page.getByRole('button', { name: 'New computer', exact: true }));
+  const provider = page.getByRole('combobox', { name: 'Computer provider' });
+  if (await provider.count()) await provider.selectOption('daytona');
+  await page.getByLabel('Computer name', { exact: true }).fill('Fixture desktop');
+  await click(page.getByRole('button', { name: 'Create computer', exact: true }));
+  const id = await eventually(() => page.evaluate(async () => (await window.workbench.computerList()).computers.find(({ name }) => name === 'Fixture desktop')?.id), 'Daytona computer');
   const desktop = page.getByRole('region', { name: 'Fixture desktop' });
   await desktop.getByRole('button', { name: 'Start', exact: true }).click();
   await desktop.getByAltText('Live desktop of Fixture desktop').waitFor();
@@ -263,7 +290,7 @@ async function verifyUpgrade(page, data) {
     return { session: snapshot.sessions.find(({ title }) => title === 'This was created before the Workbench upgrade.'),
       bookmarked: snapshot.favorites.some(({ name }) => name === 'Legacy bookmark'), timeline };
   }, data.notePath);
-  assert.ok(old.session && old.bookmarked && JSON.stringify(old.timeline).includes('snapshot'));
+  assert.ok(old.session && old.bookmarked && old.timeline.some(({ source }) => source === 'local'), JSON.stringify(old));
   assert.match(await fs.readFile(data.notePath, 'utf8'), /Updated before upgrade/);
   await page.getByRole('tab', { name: 'This was created before the Workbench upgrade.' }).click();
   await active(page).getByText('Workbench fixture response.', { exact: true }).waitFor();
@@ -280,9 +307,10 @@ async function main() {
     const data = await seed(path.join(profile, 'Workbench', 'workspace'), { existingDirectory: true });
     fixture = await serveFixture(data);
     appProcess = await start(app, profile);
-    await connect(appProcess.page, fixture.address);
+    const { model } = await connect(appProcess.page, fixture.address);
     if (scenarios.has('research')) await research(appProcess.page, fixture, data);
     if (scenarios.has('review')) await review(appProcess.page, data);
+    if (scenarios.has('routing')) await routing(appProcess.page, model, fixture);
     await appProcess.finish();
     if (scenarios.has('research')) {
       appProcess = await start(app, profile);

@@ -24,6 +24,19 @@ if (process.platform !== 'darwin') {
     run('/usr/bin/xattr', ['-cr', bundle]);
     run('/usr/bin/codesign', ['--force', '--deep', '--sign', '-', '--timestamp=none', bundle]);
     run('/usr/bin/codesign', ['--verify', '--deep', '--strict', bundle]);
+    const packagedMain = path.join(bundle, 'Contents', 'Resources', 'app.asar', 'src', 'main');
+    execFileSync(path.join(bundle, 'Contents', 'MacOS', 'Workbench'), ['-e', `
+      const fs = require('node:fs');
+      const path = require('node:path');
+      const packaged = process.argv[1];
+      for (const name of fs.readdirSync('src/main')) {
+        const local = path.join('src/main', name);
+        const bundled = path.join(packaged, name);
+        if (fs.statSync(local).isFile() && !fs.readFileSync(local).equals(fs.readFileSync(bundled))) {
+          throw Error('Build input changed while packaging: ' + local);
+        }
+      }
+    `, packagedMain], { stdio: 'inherit', env: { ...buildEnv, ELECTRON_RUN_AS_NODE: '1' } });
     run('/usr/bin/ditto', ['-c', '-k', '--keepParent', bundle, path.join(stage, archive)]);
     fs.mkdirSync(path.join(output, architecture), { recursive: true });
     const packaged = path.join(output, architecture, 'Workbench.app');

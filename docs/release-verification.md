@@ -1,6 +1,6 @@
 # Workbench preview verification
 
-Apple Silicon macOS was the release test platform. The tests used disposable Electron profiles and synthetic data. The public preview uses ad-hoc signing. Developer ID signing and notarization are pending.
+Apple Silicon macOS was the release test platform. The tests used disposable Electron profiles and synthetic data. The public preview uses ad-hoc signing. Developer ID signing and notarization are pending. The extracted ZIP passed the app signature check and the packaged smoke suite. An older SideBarTemplate profile restored its tabs, chat, bookmark, automation, and local file history.
 
 | Workflow | Fixture coverage | Live coverage |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ Apple Silicon macOS was the release test platform. The tests used disposable Ele
 | Triage email | Three unique inbox threads, urgency sorting, two local drafts, exact original navigation request, edit and restore drafts, revoked token, reconnect, and no send methods. | Fastmail account and authenticated deep-link behavior remain unverified. |
 | Run a briefing | Save an opt-in inbox automation, run it manually, restart across a scheduled occurrence, reopen the receipt, and record original excerpts and token usage. Separate crash fixture verifies occurrence deduplication. | Native Electron with a local model and mailbox fixture. |
 | Take over a computer | Request attention, take control, type a synthetic credential into the guest, resume the same Pi turn, export a real guest file, and open it from Activity. No synthetic credential appeared in host app data or requests to the model fixture. | Live local Tart Ubuntu guest passed. Daytona provisioning, stop, unsafe input rejection, handoff, export, and reconnection passed against a mock SDK. A live Daytona account remains unverified. |
-| Switch harnesses | Pi and installed OpenCode 2.3.0 both completed source-backed fixture turns. OpenCode preserved the PDF context in a second turn after restarting Workbench. | The OpenCode executable was real. The successful responses were fixture-backed. A configured Venice smoke returned a rate or credit limit. |
+| Switch harnesses | Pi and installed OpenCode 2.3.0 both completed source-backed fixture turns. OpenCode preserved PDF context after restart and delivered a steering message once during a live turn. The packaged router applied a configured Pi model rule, recorded usage, and surfaced an injected provider error without automatically replaying the request. | The OpenCode executable was real. The successful responses were fixture-backed. A configured Venice smoke returned a rate or credit limit. |
 | Recover interrupted work | SIGKILL with a recorded external action and a second queued turn. Restart preserves the queue and never automatically replays the interrupted action. | The harness fixture validates local recovery. Remote resume behavior varies by harness. |
 
 Run `npm test` for functional fixtures and `npm run test:packaged` for packaged UI and disk assertions. To run upgrade coverage, pass the current and older application bundles as the two positional arguments. See [the manual demo](demo.md).
