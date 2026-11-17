@@ -1,0 +1,31 @@
+.usage-settings, .usage-section, .usage-form, .usage-route { display: grid; gap: 12px; }
+.usage-settings { gap: 20px; }
+.usage-section { padding-top: 16px; border-top: 1px solid var(--border); }
+.usage-section h2 { font-size: var(--type-section); font-weight: 550; }
+.usage-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; }
+.usage-metric { display: grid; gap: 4px; padding: 12px 14px; background: var(--secondary); border-radius: var(--radius); align-content: start; }
+.usage-metric span, .usage-metric small { color: var(--muted-foreground); font-size: var(--type-meta); }
+.usage-metric strong { font-size: 24px; font-weight: 560; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.usage-capitalize { text-transform: capitalize; }
+.usage-budget-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 12px; }
+.usage-budget-fields.compact { margin-top: 9px; }
+.usage-budget-fields label, .usage-route label { display: grid; gap: 6px; min-width: 0; }
+.usage-form > button { justify-self: end; }
+.usage-route { min-width: 0; padding: 12px; background: var(--secondary); border: 1px solid var(--border); border-radius: var(--radius); }
+.usage-route-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: end; }
+.usage-route select { background: var(--background); border: 1px solid var(--border); border-radius: 6px; padding: 7px; width: 100%; overflow: hidden; }
+.native-models-input { resize: vertical; }
+.usage-route-controls { display: flex; }
+.usage-route summary { cursor: pointer; color: var(--muted-foreground); font-size: var(--type-meta); }
+.usage-model-list .settings-list-row > span { color: var(--muted-foreground); font-size: var(--type-meta); }
+.usage-indicator { position: relative; }
+.usage-indicator-value { position: absolute; font-size: 8px; right: 0; bottom: 0; border-radius: 5px; color: var(--foreground); background: var(--background); padding: 0 2px; line-height: 12px; }
+@media (max-width: 710px) {
+  .usage-route-grid { grid-template-columns: repeat(2, minmax(125px, 1fr)); }
+  .usage-route-controls { justify-content: flex-end; }
+}
+
+@container (max-width: 535px) {
+  .usage-route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .usage-route-controls { justify-content: flex-end; }
+}

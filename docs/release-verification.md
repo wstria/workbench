@@ -1,0 +1,18 @@
+# Workbench preview verification
+
+Apple Silicon macOS was the release test platform. The tests used disposable Electron profiles and synthetic data. The public preview uses ad-hoc signing. Developer ID signing and notarization are pending.
+
+| Workflow | Fixture coverage | Live coverage |
+| --- | --- | --- |
+| Find an answer | Search a closed PDF, open page 2, attach the exact page and a recorded web passage, and confirm both excerpts reached Pi. A separate restart test reopened a saved brief and both original sources. The source index test covers moving and relinking by content hash. | Electron and Chromium rendered the files and pages. The model response came from a local fixture. |
+| Capture research | Native browser bookmark preserves readable text and the original URL. Search and tags find the saved excerpt without the web tab. | Native Chromium `WebContentsView` was exercised against a local test server. |
+| Fix a bug and work in parallel | Separate checkouts, changes, checks, file and hunk selection, target conflict handling, and undo. The isolated fixture asserts the main checkout is unchanged until apply. | Real local Git, real file edits, and a real Node test command. Agent responses were scripted. |
+| Triage email | Three unique inbox threads, urgency sorting, two local drafts, exact original navigation request, edit and restore drafts, revoked token, reconnect, and no send methods. | Fastmail account and authenticated deep-link behavior remain unverified. |
+| Run a briefing | Save an opt-in inbox automation, run it manually, restart across a scheduled occurrence, reopen the receipt, and record original excerpts and token usage. Separate crash fixture verifies occurrence deduplication. | Native Electron with a local model and mailbox fixture. |
+| Take over a computer | Request attention, take control, type a synthetic credential into the guest, resume the same Pi turn, export a real guest file, and open it from Activity. No synthetic credential appeared in host app data or requests to the model fixture. | Live local Tart Ubuntu guest passed. Daytona provisioning, stop, unsafe input rejection, handoff, export, and reconnection passed against a mock SDK. A live Daytona account remains unverified. |
+| Switch harnesses | Pi and installed OpenCode 2.3.0 both completed source-backed fixture turns. OpenCode preserved the PDF context in a second turn after restarting Workbench. | The OpenCode executable was real. The successful responses were fixture-backed. A configured Venice smoke returned a rate or credit limit. |
+| Recover interrupted work | SIGKILL with a recorded external action and a second queued turn. Restart preserves the queue and never automatically replays the interrupted action. | The harness fixture validates local recovery. Remote resume behavior varies by harness. |
+
+Run `npm test` for functional fixtures and `npm run test:packaged` for packaged UI and disk assertions. To run upgrade coverage, pass the current and older application bundles as the two positional arguments. See [the manual demo](demo.md).
+
+First-time user observation, a whole-app VoiceOver pass, and releases for macOS Intel, Windows, and Linux remain pending. PDF indexing requires selectable text. The knowledge index is local full-text search with bounded inputs. The per-file Problems view and F12 definition lookup require installed language servers. Use a TypeScript language server with classic TypeScript 5 or 6, or Python LSP Server with a diagnostics plugin such as pyflakes. Browser data import covers bookmarks and supported browser preferences. External harness capabilities, including tool approvals, streaming and steering, depend on each installed harness and version.

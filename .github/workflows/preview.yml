@@ -1,0 +1,36 @@
+name: Publish Apple Silicon preview
+
+on:
+  push:
+    tags:
+      - 'v*-preview.*'
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run package
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Archive developer build
+        run: |
+          cp dist/Workbench-macOS-arm64-preview.zip .
+          shasum -a 256 Workbench-macOS-arm64-preview.zip > SHA256SUMS.txt
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" Workbench-macOS-arm64-preview.zip SHA256SUMS.txt \
+            --verify-tag --prerelease --title "Workbench $RELEASE_TAG" \
+            --notes-file docs/preview-release.md

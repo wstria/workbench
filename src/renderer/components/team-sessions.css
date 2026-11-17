@@ -1,0 +1,17 @@
+.team-sessions { flex: none; max-height: min(38vh, 310px); overflow: auto; width: min(100%, 900px); margin-inline: auto; padding: 5px clamp(12px, 4vw, 46px) 0; }
+.team-sessions > details { color: var(--muted-foreground); }
+.team-sessions summary { list-style: none; display: flex; align-items: center; width: fit-content; min-height: 29px; gap: 8px; cursor: pointer; font-size: .9em; }
+.team-sessions summary::-webkit-details-marker { display: none; }
+.team-sessions summary > svg:first-child { color: var(--team-color, currentColor); }
+.team-sessions summary small, .team-member small, .team-updates time { color: var(--muted-foreground); font-size: .85em; }
+.team-sessions summary:hover, .team-sessions summary:focus-visible { color: var(--foreground); }
+.team-member-list { display: grid; gap: 2px; margin: 3px 0 8px; }
+.team-member-list li { display: flex; align-items: center; gap: 4px; }
+.team-member { min-width: 0; flex: 1; display: flex; align-items: center; gap: 8px; text-align: left; padding: 6px 8px; border-radius: 7px; }
+.team-member:hover, .team-member:focus-visible, .team-member[aria-current] { background: var(--accent); color: var(--foreground); }
+.team-marker { width: 7px; height: 7px; border-radius: 50%; background: var(--team-color, currentColor); flex: none; }
+.team-member > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-member small { margin-left: auto; flex: none; }
+.team-updates p { overflow-wrap: anywhere; }
+.team-updates h3, .team-updates li strong { font-weight: 520; }
+.team-updates li { padding: 5px 0; }

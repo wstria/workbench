@@ -1,0 +1,16 @@
+export const SETTINGS_SECTIONS = [
+  { id: 'general', group: 'Workbench', label: 'General', description: 'Find your default workspace and local app data.', keywords: 'files folder storage sessions' },
+  { id: 'browser-data', group: 'Workbench', label: 'Browser data', description: 'Bring your bookmarks and browser preferences into Workbench.', keywords: 'chrome safari firefox edge brave sync login import export favorites home search profile' },
+  { id: 'preferences', group: 'Workbench', label: 'Editor', description: 'Choose how text and code files are displayed.', keywords: 'line numbers wrap' },
+  { id: 'profile', group: 'Workbench', label: 'Profile', description: 'Set your local display name.' },
+  { id: 'memory', group: 'Agent', label: 'Memory', description: 'Manage what agents remember and review suggestions.', keywords: 'personal preferences user context' },
+  { id: 'routing', group: 'Agent', label: 'Routing', description: 'Choose how Auto routes messages.', keywords: 'rules providers subscriptions fallback' },
+  { id: 'usage', group: 'Agent', label: 'Usage', description: 'Track model usage and set local limits.', keywords: 'cost tokens remaining budget providers' },
+  { id: 'harness', group: 'Agent', label: 'Harnesses', description: 'Choose which harness runs your chats.', keywords: 'pi opencode hermes codex claude engine default executable' },
+  { id: 'models', group: 'Agent', label: 'Models', description: 'Browse available models and set a default for each harness.', keywords: 'llm filter model default' },
+  { id: 'permissions', group: 'Agent', label: 'Permissions', description: 'Control how the agent uses tools.', keywords: 'approval shell command ask auto edit safety' },
+  { id: 'providers', group: 'Connections', label: 'Providers', description: 'Connect model providers or add your own API endpoint.', keywords: 'openai anthropic google ollama openrouter api key auth token credentials custom' },
+  { id: 'themes', group: 'Appearance', label: 'Themes', description: 'Choose a preset or build and save your own palette.', keywords: 'dark light custom palette contrast create' },
+  { id: 'colors', group: 'Appearance', label: 'Colors', description: 'Choose the accent for controls and highlights.' },
+  { id: 'typography', group: 'Appearance', label: 'Typography', description: 'Set separate fonts and sizes for the interface and code editor.', keywords: 'text font' },
+]

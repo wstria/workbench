@@ -1,0 +1,396 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: dark;
+  --shell-bg: #000;
+  --shell-chrome: #000;
+  --shell-rail: #000;
+  --shell-sidebar: #000;
+  --shell-stage: #000;
+  --shell-tab: #161618;
+  --shell-tab-hover: #1d1d20;
+  --shell-tab-active: #242428;
+  --shell-line: #222225;
+  --shell-line-bright: #33333a;
+  --shell-text: #ececec;
+  --shell-muted: #a1a1aa;
+  --theme-accent: #10a37f;
+  --font-ui: "Inter Variable", system-ui, sans-serif;
+  --font-size: 14px;
+  --type-meta: calc(var(--font-size) - 2px);
+  --type-compact: calc(var(--font-size) - 1px);
+  --type-label: calc(var(--font-size) - 0.5px);
+  --type-section: calc(var(--font-size) + 2px);
+  --type-heading: calc(var(--font-size) + 9px);
+  --type-title: clamp(calc(var(--font-size) + 13px), 3.5vw, calc(var(--font-size) + 24px));
+  --page-inset: clamp(20px, 4vw, 48px);
+  --page-block: clamp(24px, 4vw, 48px);
+  --surface-card: color-mix(in srgb, var(--shell-tab) 56%, var(--shell-stage));
+  --accent-text: color-mix(in srgb, var(--theme-accent) 71%, var(--foreground));
+  --font-code: ui-monospace, Menlo, Consolas, monospace;
+  --editor-font-size: 14px;
+  --radius: 10px;
+  --topbar-h: 52px;
+  --rail-w: 48px;
+  --sidebar-w: 248px;
+  --traffic-gutter: 92px;
+  --background: var(--shell-bg);
+  --foreground: var(--shell-text);
+  --popover: var(--shell-sidebar);
+  --popover-foreground: var(--shell-text);
+  --primary: var(--theme-accent);
+  --primary-foreground: #09090b;
+  --secondary: var(--shell-tab);
+  --secondary-foreground: var(--shell-text);
+  --muted: var(--shell-tab-active);
+  --muted-foreground: var(--shell-muted);
+  --accent: var(--shell-tab-hover);
+  --accent-foreground: var(--shell-text);
+  --destructive: #e5484d;
+  --border: var(--shell-line);
+  --input: var(--shell-line-bright);
+  --ring: var(--theme-accent);
+  --sidebar: var(--shell-sidebar);
+  --sidebar-foreground: var(--shell-text);
+  --sidebar-primary: var(--theme-accent);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--shell-tab-active);
+  --sidebar-accent-foreground: var(--shell-text);
+  --sidebar-border: var(--shell-line);
+  --sidebar-ring: var(--theme-accent);
+}
+
+:root[data-scheme="light"] {
+  --popover: var(--shell-stage);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: max(0px, calc(var(--radius) - 4px));
+  --radius-md: max(0px, calc(var(--radius) - 2px));
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-ui);
+    font-size: var(--font-size);
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+[data-slot="button"], [data-slot="input"], [data-slot="select-trigger"],
+[data-slot="select-item"], [data-slot="label"], [data-sidebar="menu-button"] {
+  font-family: inherit;
+  font-size: var(--type-label);
+  line-height: 1.35;
+}
+[data-slot="button"], [data-slot="label"], [data-slot="select-trigger"] { font-weight: 500; }
+[data-slot="input"], [data-slot="select-item"] { font-weight: 400; }
+[data-slot="button"][data-size="xs"] { font-size: var(--type-meta); }
+
+.shell {
+  height: 100%;
+  gap: 0;
+}
+
+.topbar {
+  display: flex;
+  flex: 0 0 var(--topbar-h);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-right: 14px;
+  background: var(--shell-chrome);
+  -webkit-app-region: drag;
+}
+
+.topbar-gutter {
+  flex: 0 0 var(--traffic-gutter);
+}
+
+.tab-region { position: relative; flex: 1; align-self: stretch; min-width: 0; }
+.tab-ghosts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.tab-ghosts .tab { position: absolute; pointer-events: none; }
+
+.tab-strip {
+  min-width: 0;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  justify-content: flex-start;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 3px;
+  background: transparent;
+}
+
+.tab {
+  position: relative;
+  flex: 0 1 178px;
+  min-width: 94px;
+  height: 34px;
+  -webkit-app-region: no-drag;
+}
+
+.tab[data-active="true"] { min-width: 120px; }
+.tab-symbol { display: flex; flex: none; color: var(--muted-foreground); }
+.tab-trigger .tab-symbol svg { width: 14px; height: 14px; }
+.tab-trigger {
+  transition-property: background-color, color, border-color;
+  transition-duration: 100ms;
+  box-shadow: none;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  padding: 0 25px 0 9px;
+  gap: 6px;
+  font-size: inherit;
+  font-weight: 440;
+  color: var(--muted-foreground);
+  -webkit-app-region: no-drag;
+}
+
+.tab-trigger:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+.tab-trigger[data-state="active"] {
+  background: var(--shell-tab-active);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.tab-close {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  width: 21px;
+  height: 23px;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  -webkit-app-region: no-drag;
+}
+
+.tab[data-active="false"] .tab-close { opacity: 0; }
+.tab[data-active="false"]:is(:hover, :focus-within) .tab-close { opacity: 1; }
+.tab-close:hover {
+  background: var(--input);
+  color: var(--foreground);
+}
+
+.chrome-button {
+  width: 31px;
+  height: 31px;
+  color: var(--muted-foreground);
+  -webkit-app-region: no-drag;
+}
+
+.chrome-button[data-active="true"],
+.chrome-button:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+.workspace {
+  flex: 1;
+  min-height: 0;
+  padding: 0 10px 9px 0;
+}
+
+.workspace-rail {
+  display: flex;
+  width: var(--rail-w);
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  background: var(--shell-rail);
+}
+
+.workspace-frame {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--shell-stage);
+}
+
+/* Clip only the sliding panel here. The frame draws the shared rounded edge. */
+.workspace-frame > [data-slot="sidebar"] {
+  position: relative;
+  overflow: clip;
+}
+
+.workspace-frame > [data-slot="sidebar"][data-state="collapsed"] {
+  visibility: hidden;
+}
+
+.workspace-frame :is([data-slot="sidebar-gap"], [data-slot="sidebar-container"]) { transition-property: none; }
+
+
+.workspace-sidebar {
+  position: absolute;
+  height: 100%;
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.stage > .work-error { flex: none; margin: 8px 12px; }
+
+.stage-panel { min-height: 0; }
+.stage-panel:not([hidden]):not([data-native="true"]) { animation: tab-content-in 140ms ease-out; }
+@keyframes tab-content-in { from { opacity: .76; } to { opacity: 1; } }
+.stage-panel:focus-visible {
+  outline: 1px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  gap: 10px;
+}
+
+.preset {
+  height: auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 10px;
+  background: var(--secondary);
+  border-color: var(--border);
+  border-radius: var(--radius);
+}
+
+.preset:hover {
+  background: var(--accent);
+  border-color: var(--input);
+}
+
+.preset[aria-pressed="true"] {
+  border-color: var(--ring);
+}
+
+.preset-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 57px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-slider {
+  width: min(48%, 220px);
+}
+
+.font-select {
+  width: min(56%, 246px);
+  background: var(--secondary);
+}
+
+.accent-picker {
+  width: 44px;
+  height: 30px;
+  padding: 4px;
+  background: var(--secondary);
+  cursor: pointer;
+}
+
+.accent-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.accent-picker::-webkit-color-swatch {
+  border: 0;
+  border-radius: max(0px, calc(var(--radius) - 5px));
+}
+
+.settings-footer {
+  margin-top: 28px;
+}
+
+:root[data-scheme="light"] :is([data-slot="sidebar-input"], .font-select, .accent-picker) {
+  background: var(--shell-stage);
+}
+
+:root[data-scheme="light"] :is(.tab-trigger, .preset, .font-select, .accent-picker, .settings-footer button):not(:focus-visible) {
+  box-shadow: none;
+}
+
+:root[data-scheme="light"] .workspace-sidebar [data-sidebar="menu-button"]:not([data-active="true"]):hover {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
